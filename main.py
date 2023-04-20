@@ -40,6 +40,7 @@ def process_ECG():
     end_index = int(end_entry.get()) if end_entry.get() else None
     selected_range = slice(start_index, end_index)
     lead_index = lead_options.index(selected_lead.get())
+    print(lead_index)
     filtered_ecg = ECG_standardization_singlelead(ECG_data[selected_range, lead_index], method="zscore")
 
     print(selected_filters)
@@ -59,7 +60,7 @@ def process_ECG():
 
 
 def plot_ecg():
-    global filtered_ecg, ECG_data, selected_range
+    global filtered_ecg, ECG_data, selected_range, lead_options, lead_index
     
     raw_ecg = ECG_data[selected_range, lead_index]
     fig = plt.Figure(figsize=(12, 6))
@@ -68,13 +69,13 @@ def plot_ecg():
     ax1 = fig.add_subplot(211)
     ax1.plot(raw_ecg)
     ax1.set(xlabel="Time (s)", ylabel="Voltage (mV)")
-    ax1.set_title("Raw ECG")
+    ax1.set_title(f"Raw {lead_options[lead_index]} ECG")
 
     # Filtered ECG subplot
     ax2 = fig.add_subplot(212)
     ax2.plot(filtered_ecg)
     ax2.set(xlabel="Time (s)", ylabel="Voltage (mV)")
-    ax2.set_title("Filtered ECG")
+    ax2.set_title(f"Filtered {lead_options[lead_index]} ECG")
 
     # Create a new window for the plot
     plot_window = tk.Toplevel(window)
@@ -131,10 +132,23 @@ def save_plot():
         filetypes=[("PNG Files", "*.png"), ("JPEG Files", "*.jpg"), ("SVG Files", "*.svg"), ("PDF Files", "*.pdf")]
     )
     if file_path:
-        fig, ax = plt.subplots()
-        ax.plot(filtered_ecg[:, 0])
-        fig.savefig(file_path)
+        raw_ecg = ECG_data[selected_range, lead_index]
+        fig = plt.Figure(figsize=(24, 12))
+
+        # Raw ECG subplot
+        ax1 = fig.add_subplot(211)
+        ax1.plot(raw_ecg)
+        ax1.set(xlabel="Time (s)", ylabel="Voltage (mV)")
+        ax1.set_title(f"Raw {lead_options[lead_index]} ECG")
+
+        # Filtered ECG subplot
+        ax2 = fig.add_subplot(212)
+        ax2.plot(filtered_ecg)
+        ax2.set(xlabel="Time (s)", ylabel="Voltage (mV)")
+        ax2.set_title(f"Filtered {lead_options[lead_index]} ECG")
+        fig.savefig(file_path, dpi=300)
         plt.close(fig)
+        
 
 def add_filter(*args):
     selected_filter = filter_menu.get()

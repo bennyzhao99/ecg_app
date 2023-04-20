@@ -52,8 +52,8 @@ def read_ECGdata(FILE_PATH,
         
         # ["I II V1 V2 V3 V4 V5 V6 avR avL avF III"]
         #lead_index = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6']
-        permutation = [0, 1, 11, 8, 9, 10, 2, 3, 4, 5, 6, 7]
-        #permutation = [0, 1, 6, 7, 8, 9, 10, 11, 3, 4, 5, 2]
+        #permutation = [0, 1, 11, 8, 9, 10, 2, 3, 4, 5, 6, 7]
+        permutation = [0, 1, 6, 7, 8, 9, 10, 11, 3, 4, 5, 2]
         idx = np.empty_like(permutation)
         idx[permutation] = np.arange(len(permutation))
         ecg = ecg[:, idx]
